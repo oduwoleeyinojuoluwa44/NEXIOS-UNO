@@ -3,17 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/axios';
 import StatCard from '../components/StatCard';
+import Skeleton from '../components/Skeleton';
 import { Briefcase, Eye, Send, Target, ChevronRight, Plus, ExternalLink, Users, CheckCircle2 } from 'lucide-react';
 // @ts-ignore
 import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  
-  const { data: analytics } = useQuery({
+
+  const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: ['analytics'],
     queryFn: async () => {
-      // Updated to match PRD: GET /api/users/me/analytics
       const res = await api.get('/api/users/me/analytics');
       return res.data;
     },
@@ -46,10 +46,21 @@ const Dashboard: React.FC = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard label="Selection Score" value={analytics.selectionScore} suffix="/100" trend="+12%" icon={<Target size={20} />} />
-        <StatCard label="Active Matches" value={analytics.activeMatches} trend="+2 new" icon={<Users size={20} />} />
-        <StatCard label="Application Out" value={analytics.applicationsOut} icon={<Send size={20} />} />
-        <StatCard label="Profile Views" value={analytics.profileViews} icon={<Eye size={20} />} />
+        {analyticsLoading ? (
+          <>
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+          </>
+        ) : (
+          <>
+            <StatCard label="Selection Score" value={analytics.selectionScore} suffix="/100" trend="+12%" icon={<Target size={20} />} />
+            <StatCard label="Active Matches" value={analytics.activeMatches} trend="+2 new" icon={<Users size={20} />} />
+            <StatCard label="Application Out" value={analytics.applicationsOut} icon={<Send size={20} />} />
+            <StatCard label="Profile Views" value={analytics.profileViews} icon={<Eye size={20} />} />
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
