@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
+    gmail: '',
     password: ''
   });
 
@@ -66,14 +66,14 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-bold text-nexio-dark mb-2">Email</label>
+              <label className="block text-sm font-bold text-nexio-dark mb-2">Gmail</label>
               <input
                 required
                 type="email"
                 placeholder="johndoe@gmail.com"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-nexio-blue outline-none transition-all"
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                value={formData.gmail}
+                onChange={(e) => setFormData({...formData, gmail: e.target.value})}
               />
             </div>
             <div className="relative">

@@ -2,15 +2,13 @@
 export interface User {
   id: string;
   username: string;
-  email: string;
+  gmail?: string;
+  email?: string;
   fullName: string;
   professionalTitle?: string;
-  location?: string;
-  experienceYears?: number;
-  remotePreference?: 'Remote' | 'Hybrid' | 'On-site' | 'Flexible';
-  availabilityStatus?: string;
+  country?: string;
+  street?: string;
   bio?: string;
-  intentStatement?: string;
   profilePhoto?: string;
   preferences?: string[];
   selectionScore?: number;
@@ -21,23 +19,18 @@ export interface User {
 
 export interface SkillProof {
   id: string;
-  skill: string;
-  projectName: string;
-  description: string;
-  impact: string;
-  projectLink?: string;
-  supportingMaterials?: string[];
-  createdAt: string;
+  name: string;
+  level: string;
 }
 
 export interface Experience {
   id: string;
-  companyName: string;
-  role: string;
+  title: string;
+  company: string;
   startDate: string;
   endDate?: string;
-  isCurrent: boolean;
-  description: string;
+  isCurrent?: boolean;
+  description?: string;
 }
 
 export interface ProblemResponse {

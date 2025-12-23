@@ -12,7 +12,7 @@ const Search: React.FC = () => {
     queryFn: async () => {
       // Updated to match PRD: GET /api/public/search
       const res = await api.get('/api/public/search', {
-        params: { q: searchTerm, location: locationTerm }
+        params: { query: searchTerm, country: locationTerm, skill: '', page: 1, limit: 20 }
       });
       return res.data;
     },

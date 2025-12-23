@@ -16,11 +16,9 @@ const ProfileEditor: React.FC = () => {
   const [basicInfo, setBasicInfo] = useState({
     fullName: user?.fullName || '',
     professionalTitle: user?.professionalTitle || '',
-    location: user?.location || '',
-    experienceYears: user?.experienceYears || 0,
-    remotePreference: user?.remotePreference || 'Flexible',
-    availabilityStatus: user?.availabilityStatus || 'Actively Looking',
-    intentStatement: user?.intentStatement || ''
+    country: user?.country || '',
+    street: user?.street || '',
+    bio: (user as any)?.bio || (user as any)?.intentStatement || ''
   });
 
   const [skills, setSkills] = useState<SkillProof[]>([]);
@@ -33,11 +31,9 @@ const ProfileEditor: React.FC = () => {
       setBasicInfo({
         fullName: user.fullName || '',
         professionalTitle: user.professionalTitle || '',
-        location: user.location || '',
-        experienceYears: user.experienceYears || 0,
-        remotePreference: user.remotePreference || 'Flexible',
-        availabilityStatus: user.availabilityStatus || 'Actively Looking',
-        intentStatement: user.intentStatement || ''
+        country: user.country || '',
+        street: user.street || '',
+        bio: (user as any)?.bio || (user as any)?.intentStatement || ''
       });
       // In a real app, these might be separate GET requests or pre-populated in AuthContext
     }
@@ -46,7 +42,11 @@ const ProfileEditor: React.FC = () => {
   const handleSaveBasic = async () => {
     setIsLoading(true);
     try {
-      const res = await api.put('/api/users/me', basicInfo);
+      const res = await api.put('/api/users/me', {
+        country: basicInfo.country,
+        street: basicInfo.street,
+        bio: basicInfo.bio
+      });
       updateUser(res.data);
       alert("Basic profile updated!");
     } catch (err) {
@@ -61,10 +61,8 @@ const ProfileEditor: React.FC = () => {
     setIsSubmitting('skill');
     try {
       const newSkillData = { 
-        skill: 'New Skill', 
-        projectName: 'My Project', 
-        description: 'Detail of work', 
-        impact: 'Measurable outcome' 
+        name: 'New Skill', 
+        level: 'beginner' 
       };
       const res = await api.post('/api/users/me/skills', newSkillData);
       setSkills(prev => [...prev, res.data]);
@@ -99,8 +97,8 @@ const ProfileEditor: React.FC = () => {
     setIsSubmitting('exp');
     try {
       const newExpData = { 
-        companyName: 'Company Name', 
-        role: 'Job Role', 
+        company: 'Company Name', 
+        title: 'Job Role', 
         startDate: new Date().toISOString(), 
         isCurrent: true, 
         description: 'Role description' 
@@ -196,14 +194,34 @@ const ProfileEditor: React.FC = () => {
                   />
                 </div>
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-nexio-dark uppercase tracking-widest">Country</label>
+                  <input 
+                    type="text" 
+                    value={basicInfo.country}
+                    onChange={e => setBasicInfo({...basicInfo, country: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-transparent focus:bg-white focus:border-nexio-blue outline-none transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-nexio-dark uppercase tracking-widest">Street</label>
+                  <input 
+                    type="text" 
+                    value={basicInfo.street}
+                    onChange={e => setBasicInfo({...basicInfo, street: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-transparent focus:bg-white focus:border-nexio-blue outline-none transition-all"
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-nexio-dark uppercase tracking-widest">Intent Statement</label>
+                <label className="text-xs font-bold text-nexio-dark uppercase tracking-widest">Bio</label>
                 <textarea 
                   rows={4}
-                  value={basicInfo.intentStatement}
-                  onChange={e => setBasicInfo({...basicInfo, intentStatement: e.target.value})}
+                  value={basicInfo.bio}
+                  onChange={e => setBasicInfo({...basicInfo, bio: e.target.value})}
                   className="w-full p-4 bg-slate-50 rounded-xl border border-transparent focus:bg-white focus:border-nexio-blue outline-none text-sm transition-all"
-                  placeholder="Clearly state what roles and impact you are looking for..."
+                  placeholder="Tell employers about your experience and strengths..."
                 />
               </div>
             </div>
@@ -217,24 +235,17 @@ const ProfileEditor: React.FC = () => {
                   <div className="space-y-4">
                     <input 
                       className="bg-transparent font-bold text-nexio-dark text-lg w-full outline-none focus:border-b border-nexio-blue"
-                      value={skill.skill}
-                      onChange={e => setSkills(prev => prev.map(s => s.id === skill.id ? {...s, skill: e.target.value} : s))}
-                      onBlur={() => patchSkill(skill.id, { skill: skill.skill })}
+                      value={skill.name}
+                      onChange={e => setSkills(prev => prev.map(s => s.id === skill.id ? {...s, name: e.target.value} : s))}
+                      onBlur={() => patchSkill(skill.id, { name: skill.name })}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <input 
-                        placeholder="Project Name"
+                        placeholder="Level (e.g., beginner, intermediate)"
                         className="bg-transparent text-sm text-nexio-medium outline-none border-b border-transparent focus:border-nexio-blue"
-                        value={skill.projectName}
-                        onChange={e => setSkills(prev => prev.map(s => s.id === skill.id ? {...s, projectName: e.target.value} : s))}
-                        onBlur={() => patchSkill(skill.id, { projectName: skill.projectName })}
-                      />
-                      <input 
-                        placeholder="Measurable Impact"
-                        className="bg-transparent text-sm text-nexio-green font-bold outline-none border-b border-transparent focus:border-nexio-blue"
-                        value={skill.impact}
-                        onChange={e => setSkills(prev => prev.map(s => s.id === skill.id ? {...s, impact: e.target.value} : s))}
-                        onBlur={() => patchSkill(skill.id, { impact: skill.impact })}
+                        value={skill.level}
+                        onChange={e => setSkills(prev => prev.map(s => s.id === skill.id ? {...s, level: e.target.value} : s))}
+                        onBlur={() => patchSkill(skill.id, { level: skill.level })}
                       />
                     </div>
                   </div>
@@ -259,17 +270,17 @@ const ProfileEditor: React.FC = () => {
                     <BriefcaseIcon size={18} className="text-nexio-blue" />
                     <input 
                       className="bg-transparent font-bold text-nexio-dark outline-none focus:border-b border-nexio-blue"
-                      value={exp.role}
-                      onChange={e => setExperiences(prev => prev.map(ex => ex.id === exp.id ? {...ex, role: e.target.value} : ex))}
-                      onBlur={() => updateExp(exp.id, { role: exp.role })}
+                      value={exp.title}
+                      onChange={e => setExperiences(prev => prev.map(ex => ex.id === exp.id ? {...ex, title: e.target.value} : ex))}
+                      onBlur={() => updateExp(exp.id, { title: exp.title })}
                     />
                   </div>
                   <input 
                     placeholder="Company Name"
                     className="bg-transparent text-sm text-nexio-medium w-full outline-none border-b border-transparent focus:border-nexio-blue mb-4"
-                    value={exp.companyName}
-                    onChange={e => setExperiences(prev => prev.map(ex => ex.id === exp.id ? {...ex, companyName: e.target.value} : ex))}
-                    onBlur={() => updateExp(exp.id, { companyName: exp.companyName })}
+                    value={exp.company}
+                    onChange={e => setExperiences(prev => prev.map(ex => ex.id === exp.id ? {...ex, company: e.target.value} : ex))}
+                    onBlur={() => updateExp(exp.id, { company: exp.company })}
                   />
                   <textarea 
                     placeholder="Briefly describe your responsibilities..."
