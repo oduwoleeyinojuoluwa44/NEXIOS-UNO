@@ -37,6 +37,8 @@ const PublicProfile: React.FC = () => {
 
   if (isLoading) return <div className="flex items-center justify-center h-screen">Loading Profile...</div>;
 
+  if (!profile) return <div className="flex items-center justify-center h-screen">Profile not found</div>;
+
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-8 py-12">
@@ -45,9 +47,9 @@ const PublicProfile: React.FC = () => {
         <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-10 mb-8">
            <div className="relative">
               <img 
-                src={profile.profilePhoto} 
+                src={profile.profilePhoto || `https://ui-avatars.com/api/?name=${profile.fullName || 'User'}&background=4a90e2&color=fff`} 
                 className="w-40 h-40 rounded-full border-8 border-white shadow-2xl object-cover" 
-                alt={profile.fullName} 
+                alt={profile.fullName || 'Profile'} 
               />
               {profile.verified && (
                 <div className="absolute bottom-2 right-2 bg-white rounded-full p-1 text-nexio-blue shadow-lg">
