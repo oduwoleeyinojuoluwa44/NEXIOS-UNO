@@ -21,6 +21,11 @@ export interface SkillProof {
   id: string;
   name: string;
   level: string;
+  projectName?: string;
+  description?: string;
+  impact?: string;
+  projectLink?: string;
+  supportingMaterials?: string[];
 }
 
 export interface Experience {
