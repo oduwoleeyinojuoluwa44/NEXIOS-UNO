@@ -5,6 +5,7 @@ import api from '../lib/axios';
 interface AuthContextType extends AuthState {
   login: (userData: User) => void;
   signup: (userData: User) => void;
+  googleLogin: (token: string) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
 }
@@ -21,7 +22,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        // Updated to match PRD: GET /api/users/me
         const response = await api.get('/api/users/me');
         setState({ user: response.data, isLoading: false, error: null });
       } catch (err) {
@@ -41,14 +41,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = (userData: User) => setState({ user: userData, isLoading: false, error: null });
   const signup = (userData: User) => setState({ user: userData, isLoading: false, error: null });
+  
+  const googleLogin = async (token: string) => {
+    try {
+      const response = await api.post('/api/auth/google', { token });
+      setState({ user: response.data, isLoading: false, error: null });
+    } catch (err) {
+      console.error('Google Auth Failed', err);
+      throw err;
+    }
+  };
+
   const logout = async () => {
     try {
-      // Updated to match PRD: POST /api/auth/logout
       await api.post('/api/auth/logout');
     } finally {
       setState({ user: null, isLoading: false, error: null });
     }
   };
+
   const updateUser = (userData: Partial<User>) => {
     setState(prev => ({
       ...prev,
@@ -57,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, signup, logout, updateUser }}>
+    <AuthContext.Provider value={{ ...state, login, signup, googleLogin, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

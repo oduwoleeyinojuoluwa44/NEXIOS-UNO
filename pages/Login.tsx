@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-// @ts-ignore
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/axios';
 
 const Login: React.FC = () => {
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +18,25 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // Updated to match PRD: POST /api/auth/login
       const response = await api.post('/api/auth/login', formData);
       login(response.data);
       navigate('/dashboard');
     } catch (err) {
       alert("Invalid credentials");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    // In a real production app, this would use a library like @react-oauth/google
+    // Here we simulate the token exchange with the specified endpoint
+    try {
+      setIsLoading(true);
+      await googleLogin("simulated_google_token");
+      navigate('/dashboard');
+    } catch (err) {
+      alert("Google Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -38,9 +50,13 @@ const Login: React.FC = () => {
           <h2 className="text-4xl font-bold text-nexio-dark mb-2">Hello, <span className="text-nexio-blue italic">Welcome Back!</span></h2>
           <p className="text-nexio-medium mb-10">Sign in to continue where your evidence speaks for you.</p>
 
-          <button className="w-full flex items-center justify-center gap-3 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors font-medium text-nexio-dark mb-8">
+          <button 
+            onClick={handleGoogleAuth}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-3 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors font-medium text-nexio-dark mb-8 disabled:opacity-50"
+          >
             <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google" className="w-5 h-5" />
-            Sign in with Google
+            {isLoading ? "Connecting..." : "Sign in with Google"}
           </button>
 
           <div className="relative mb-8 text-center">
@@ -55,7 +71,7 @@ const Login: React.FC = () => {
                 required
                 type="email"
                 placeholder="johndoe@gmail.com"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-nexio-blue focus:ring-1 focus:ring-nexio-blue outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-nexio-blue outline-none transition-all"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />
@@ -66,7 +82,7 @@ const Login: React.FC = () => {
                 required
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-nexio-blue focus:ring-1 focus:ring-nexio-blue outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-nexio-blue outline-none transition-all"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
               />
@@ -79,15 +95,12 @@ const Login: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex justify-end">
-              <button type="button" className="text-xs font-bold text-nexio-medium hover:text-nexio-blue">Forget password?</button>
-            </div>
-
             <button
               disabled={isLoading}
               type="submit"
-              className="w-full py-4 bg-nexio-blue text-white rounded-xl font-bold shadow-lg shadow-blue-100 hover:shadow-xl transition-all disabled:opacity-50"
+              className="w-full py-4 bg-nexio-blue text-white rounded-xl font-bold shadow-lg shadow-blue-100 hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
+              {isLoading && <Loader2 className="animate-spin" size={20} />}
               {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
@@ -106,19 +119,6 @@ const Login: React.FC = () => {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-          <div className="absolute bottom-12 left-12 right-12">
-            <div className="bg-white/90 backdrop-blur p-6 rounded-2xl shadow-2xl max-w-sm ml-auto">
-               <div className="flex items-center gap-4 mb-4">
-                  <img src="https://ui-avatars.com/api/?name=Emmanuel+M" alt="User" className="w-12 h-12 rounded-full shadow" />
-                  <div>
-                    <h4 className="font-bold text-nexio-dark">Emmanuel M.</h4>
-                    <p className="text-xs text-nexio-medium">Backend Developer</p>
-                  </div>
-                  <div className="ml-auto bg-blue-100 text-nexio-blue px-3 py-1 rounded-full text-[10px] font-bold">Interview Scheduled</div>
-               </div>
-               <p className="text-sm text-nexio-medium leading-relaxed">Nexio match score: 94%. Matched for verified skill in Distributed Systems.</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
