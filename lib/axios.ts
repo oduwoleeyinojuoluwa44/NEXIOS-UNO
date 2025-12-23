@@ -1,8 +1,14 @@
 import axios from 'axios';
 
+// In this environment, environment variables are available on process.env
+const baseURL = process.env.VITE_API_BASE_URL;
+
+if (!baseURL && process.env.NODE_ENV === 'development') {
+  console.warn('VITE_API_BASE_URL is not defined. API calls will use relative paths which may cause 405 errors.');
+}
+
 const api = axios.create({
-  // Fix for environment type resolution: @ts-ignore
-  baseURL: process.env.VITE_API_BASE_URL,
+  baseURL: baseURL || '',
   withCredentials: true,
 });
 
