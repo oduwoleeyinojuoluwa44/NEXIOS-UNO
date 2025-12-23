@@ -1,22 +1,22 @@
 import axios from 'axios';
 
-// In this environment, environment variables are available on process.env
-const baseURL = process.env.VITE_API_BASE_URL;
-
-if (!baseURL && process.env.NODE_ENV === 'development') {
-  console.warn('VITE_API_BASE_URL is not defined. API calls will use relative paths which may cause 405 errors.');
-}
+// Ensure we pick up the VITE_API_BASE_URL from the environment
+const baseURL = process.env.VITE_API_BASE_URL || '';
 
 const api = axios.create({
-  baseURL: baseURL || '',
+  baseURL: baseURL,
   withCredentials: true,
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Check if it's a 405 Method Not Allowed - often happens if baseURL is wrong
+    if (error.response?.status === 405) {
+      console.error('Method Not Allowed: Check if the endpoint and HTTP method (GET/POST/PUT/PATCH/DELETE) are correct.');
+    }
+    
     if (error.response?.status === 401) {
-      // Logic for 401: clear local state via custom event or context update
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
     return Promise.reject(error);
