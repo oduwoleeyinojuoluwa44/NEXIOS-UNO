@@ -114,7 +114,7 @@ const Login: React.FC = () => {
       <div className="hidden lg:block w-1/2 p-12 bg-gray-50 overflow-hidden relative">
         <div className="h-full w-full rounded-[40px] overflow-hidden relative shadow-2xl border-8 border-white">
           <img 
-            src="https://picsum.photos/seed/nigeria-success/1200/1600" 
+            src="https://i.imgur.com/4g8H5Zp.jpg" 
             alt="Success" 
             className="w-full h-full object-cover"
           />

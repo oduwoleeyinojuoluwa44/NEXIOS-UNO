@@ -145,8 +145,8 @@ const Signup: React.FC = () => {
       <div className="hidden lg:block w-1/2 p-12 bg-gray-50 overflow-hidden relative">
         <div className="h-full w-full rounded-[40px] overflow-hidden relative shadow-2xl border-8 border-white">
           <img 
-            src="https://picsum.photos/seed/talent/1200/1600" 
-            alt="Success" 
+            src="https://i.imgur.com/edCzh3k.jpg" 
+            alt="Smiling professional using phone" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>

@@ -3,19 +3,24 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/axios';
+import { useAuth } from '../context/AuthContext';
 import { MapPin, Briefcase, Mail, Globe, Share2, Linkedin, CheckCircle2, Target, Eye, Users, ShieldCheck, Plus, TrendingUp } from 'lucide-react';
 import StatCard from '../components/StatCard';
 
 const PublicProfile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
+  const { user } = useAuth();
+  const handleUsername = username || user?.username;
 
   const { data: profile, isLoading } = useQuery({
-    queryKey: ['publicProfile', username],
+    queryKey: ['publicProfile', handleUsername],
     queryFn: async () => {
+      if (!handleUsername) throw new Error('No username provided');
       // Updated to match PRD: GET /api/public/users/:username
-      const res = await api.get(`/api/public/users/${username}`);
+      const res = await api.get(`/api/public/users/${handleUsername}`);
       return res.data;
     },
+    enabled: !!handleUsername,
     // Mock data if API doesn't exist yet for demo
     placeholderData: {
       fullName: 'Ayomide',
@@ -37,7 +42,7 @@ const PublicProfile: React.FC = () => {
 
   if (isLoading) return <div className="flex items-center justify-center h-screen">Loading Profile...</div>;
 
-  if (!profile) return <div className="flex items-center justify-center h-screen">Profile not found</div>;
+  if (!profile || !handleUsername) return <div className="flex items-center justify-center h-screen">Profile not found</div>;
 
   return (
     <div className="bg-slate-50 min-h-screen">
