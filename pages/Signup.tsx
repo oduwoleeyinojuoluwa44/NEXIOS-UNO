@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/axios';
+import signupHero from '../images/PHOTO-2025-12-23-16-37-35 (1).jpg';
 
 const Signup: React.FC = () => {
   const { signup, googleLogin } = useAuth();
@@ -145,7 +146,7 @@ const Signup: React.FC = () => {
       <div className="hidden lg:block w-1/2 p-12 bg-gray-50 overflow-hidden relative">
         <div className="h-full w-full rounded-[40px] overflow-hidden relative shadow-2xl border-8 border-white">
           <img 
-            src="https://i.imgur.com/edCzh3k.jpg" 
+            src={signupHero} 
             alt="Smiling professional using phone" 
             className="w-full h-full object-cover"
           />
