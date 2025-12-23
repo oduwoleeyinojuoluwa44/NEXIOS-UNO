@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-// Ensure we pick up the VITE_API_BASE_URL from the environment
-const baseURL = process.env.VITE_API_BASE_URL || '';
+// Ensure we pick up the VITE_API_BASE_URL from the Vite environment
+const baseURL = import.meta.env.VITE_API_BASE_URL || '';
+
+if (!baseURL && import.meta.env.DEV) {
+  console.warn('VITE_API_BASE_URL is not set; API calls will hit the frontend origin.');
+}
 
 const api = axios.create({
   baseURL: baseURL,
