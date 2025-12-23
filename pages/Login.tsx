@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 // @ts-ignore
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,7 +19,8 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await api.post('/auth/login', formData);
+      // Updated to match PRD: POST /api/auth/login
+      const response = await api.post('/api/auth/login', formData);
       login(response.data);
       navigate('/dashboard');
     } catch (err) {

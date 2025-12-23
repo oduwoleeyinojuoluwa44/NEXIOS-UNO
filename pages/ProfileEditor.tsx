@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 // @ts-ignore
@@ -35,16 +34,17 @@ const ProfileEditor: React.FC = () => {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      // 1. Update basic info & intent
-      await api.put('/users/me', { ...basicInfo, intentStatement: intent });
-      
-      // 2. Mock saving skills (since they are separate endpoints in PRD)
-      // For a real app, you'd iterate and POST/PATCH each
+      // Updated to match PRD: PUT /api/users/me
+      await api.put('/api/users/me', { 
+        ...basicInfo, 
+        intentStatement: intent 
+      });
       
       updateUser({ ...basicInfo, intentStatement: intent });
       navigate('/dashboard');
     } catch (err) {
-      alert("Error saving profile");
+      console.error(err);
+      alert("Error saving profile. Please check your connection.");
     } finally {
       setIsLoading(false);
     }

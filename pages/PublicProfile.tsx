@@ -1,4 +1,3 @@
-
 import React from 'react';
 // @ts-ignore
 import { useParams, Link } from 'react-router-dom';
@@ -13,7 +12,8 @@ const PublicProfile: React.FC = () => {
   const { data: profile, isLoading } = useQuery({
     queryKey: ['publicProfile', username],
     queryFn: async () => {
-      const res = await api.get(`/public/users/${username}`);
+      // Updated to match PRD: GET /api/public/users/:username
+      const res = await api.get(`/api/public/users/${username}`);
       return res.data;
     },
     // Mock data if API doesn't exist yet for demo

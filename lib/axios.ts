@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Use optional chaining to safely check for env and VITE_API_BASE_URL
-  // This prevents "Cannot read properties of undefined" if import.meta.env is not present
-  baseURL: (import.meta as any)?.env?.VITE_API_BASE_URL || '/api',
+  // Fix for environment type resolution: @ts-ignore
+  baseURL: process.env.VITE_API_BASE_URL,
   withCredentials: true,
 });
 

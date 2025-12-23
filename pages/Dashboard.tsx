@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
@@ -14,7 +13,8 @@ const Dashboard: React.FC = () => {
   const { data: analytics } = useQuery({
     queryKey: ['analytics'],
     queryFn: async () => {
-      const res = await api.get('/users/me/analytics');
+      // Updated to match PRD: GET /api/users/me/analytics
+      const res = await api.get('/api/users/me/analytics');
       return res.data;
     },
     initialData: {

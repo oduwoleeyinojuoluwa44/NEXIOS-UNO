@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 // @ts-ignore
 import { Link, useNavigate } from 'react-router-dom';
@@ -27,7 +26,8 @@ const Signup: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await api.post('/auth/signup', {
+      // Updated to match PRD: POST /api/auth/signup
+      const response = await api.post('/api/auth/signup', {
         username: formData.username,
         email: formData.email,
         password: formData.password

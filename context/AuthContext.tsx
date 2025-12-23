@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthState } from '../types';
 import api from '../lib/axios';
@@ -22,7 +21,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const response = await api.get('/auth/me');
+        // Updated to match PRD: GET /api/users/me
+        const response = await api.get('/api/users/me');
         setState({ user: response.data, isLoading: false, error: null });
       } catch (err) {
         setState({ user: null, isLoading: false, error: null });
@@ -43,7 +43,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = (userData: User) => setState({ user: userData, isLoading: false, error: null });
   const logout = async () => {
     try {
-      await api.post('/auth/logout');
+      // Updated to match PRD: POST /api/auth/logout
+      await api.post('/api/auth/logout');
     } finally {
       setState({ user: null, isLoading: false, error: null });
     }
