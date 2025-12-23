@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-nexio-dark font-heading">Welcome back, {user?.fullName.split(' ')[0]}</h1>
+          <h1 className="text-3xl font-bold text-nexio-dark font-heading">Welcome back, {user?.fullName?.split?.(' ')?.[0] || 'there'}</h1>
           <div className="flex items-center gap-4 mt-1">
             <p className="text-nexio-medium text-sm font-medium">You are ahead of 80% of designers in the world</p>
             <span className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-nexio-blue rounded-full text-xs font-bold">
