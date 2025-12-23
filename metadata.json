@@ -1,0 +1,7 @@
+{
+  "name": "Nexio - Proof-Based Talent Platform",
+  "description": "A professional talent visibility platform that enables job seekers to showcase real work with measurable impact through a proof-based system, specifically designed for the Nigerian market.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
